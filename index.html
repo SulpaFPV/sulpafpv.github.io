@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SULPA — Motor Driver Technology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,200;0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --bg-deep:    #080c12;
+  --bg-base:    #0d1520;
+  --bg-card:    #111d2e;
+  --bg-raised:  #162236;
+  --blue-core:  #2a6cf6;
+  --blue-bright:#4d8fff;
+  --blue-glow:  rgba(42,108,246,0.18);
+  --blue-line:  rgba(42,108,246,0.22);
+  --cyan:       #30d6e8;
+  --grey-1:     #e2eaf5;
+  --grey-2:     #8fa3be;
+  --grey-3:     #3d5470;
+  --grey-4:     #1e2e42;
+  --line:       rgba(42,108,246,0.15);
+  --font-display: 'Rajdhani', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--bg-deep);
+  color: var(--grey-1);
+  font-family: var(--font-body);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── PAGE SYSTEM ─────────────────────────── */
+.page { display:none; min-height:100vh; }
+.page.active { display:block; }
+
+/* ── SCANLINE TEXTURE ───────────────────── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+}
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════ */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  height:66px; padding:0 4vw;
+  display:flex; align-items:center; justify-content:space-between;
+  background: rgba(8,12,18,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--blue-line);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size:1.75rem; font-weight:700;
+  letter-spacing:0.18em; color:var(--grey-1);
+  text-decoration:none;
+  display:flex; align-items:center; gap:0.5rem;
+}
+.nav-logo-dot {
+  width:7px; height:7px; border-radius:50%;
+  background: var(--blue-core);
+  box-shadow: 0 0 10px var(--blue-core), 0 0 20px rgba(42,108,246,0.4);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100%{ box-shadow:0 0 8px var(--blue-core), 0 0 18px rgba(42,108,246,0.3); transform:scale(1); }
+  50%{ box-shadow:0 0 14px var(--cyan), 0 0 28px rgba(48,214,232,0.4); transform:scale(1.2); }
+}
+.nav-links { display:flex; gap:2.5rem; list-style:none; align-items:center; }
+.nav-links a {
+  font-family: var(--font-display); font-size:0.85rem; font-weight:500;
+  letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--grey-2); text-decoration:none;
+  transition:color 0.25s;
+}
+.nav-links a:hover, .nav-links a.active { color:var(--blue-bright); }
+.nav-menu { display:none; flex-direction:column; gap:5px; }
+.nav-menu span { display:block; width:22px; height:1px; background:var(--grey-1); }
+
+/* ══════════════════════════════════════════
+   HOME — HERO
+══════════════════════════════════════════ */
+.hero {
+  min-height:100vh; position:relative;
+  display:flex; align-items:center;
+  padding: 66px 4vw 0; overflow:hidden;
+}
+
+/* Animated grid bg */
+.hero-grid {
+  position:absolute; inset:0; z-index:0;
+  background-image:
+    linear-gradient(var(--blue-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blue-line) 1px, transparent 1px);
+  background-size:60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  animation: gridShift 20s linear infinite;
+}
+@keyframes gridShift { from{background-position:0 0} to{background-position:60px 60px} }
+
+.hero-glow {
+  position:absolute; inset:0; z-index:0;
+  background: radial-gradient(ellipse 65% 65% at 55% 45%,
+    rgba(42,108,246,0.10) 0%,
+    rgba(30,46,66,0.08) 50%,
+    transparent 100%);
+}
+
+.hero-content {
+  position:relative; z-index:2;
+  max-width:680px;
+  animation: heroIn 1s ease both;
+}
+@keyframes heroIn {
+  from{ opacity:0; transform:translateY(28px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+.hero-badge {
+  display:inline-flex; align-items:center; gap:0.6rem;
+  font-family:var(--font-display); font-size:0.72rem; font-weight:500;
+  letter-spacing:0.28em; text-transform:uppercase; color:var(--blue-bright);
+  border:1px solid var(--blue-line); padding:0.45rem 1rem;
+  margin-bottom:2.2rem; background:rgba(42,108,246,0.07);
+}
+.hero-badge-dot { width:5px; height:5px; border-radius:50%; background:var(--cyan); }
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem,8vw,7.5rem);
+  font-weight:700; line-height:0.9;
+  letter-spacing:0.04em; color:var(--grey-1);
+  margin-bottom:1.8rem;
+}
+.hero-title .accent { color:var(--blue-bright); display:block; }
+.hero-title .sub {
+  font-size:clamp(1rem,2.5vw,1.8rem); font-weight:300;
+  color:var(--grey-2); letter-spacing:0.08em; display:block;
+  margin-top:0.6rem;
+}
+
+/* ╔═══════════════════════════════════╗
+   ║  ← BURAYA SLOGAN GELECEk          ║
+   ║  hero-slogan içeriğini değiştir   ║
+   ╚═══════════════════════════════════╝ */
+.hero-slogan {
+  font-size:1.05rem; line-height:1.85; color:var(--grey-2);
+  font-weight:300; 
+  max-width: 500px; 
+  margin-bottom:3rem;
+}
+
+.hero-cta {
+  display:inline-flex; align-items:center; gap:1rem;
+  font-family:var(--font-display); font-size:0.8rem; font-weight:600;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--bg-deep); background:var(--blue-core);
+  padding:0.85rem 2rem; border:none;
+  transition: background 0.3s, box-shadow 0.3s;
+  text-decoration:none;
+  box-shadow: 0 0 20px rgba(42,108,246,0.35);
+}
+.hero-cta:hover {
+  background: var(--blue-bright);
+  box-shadow: 0 0 32px rgba(42,108,246,0.55);
+}
+.hero-cta-arrow { font-size:1.1rem; transition:transform 0.3s; }
+.hero-cta:hover .hero-cta-arrow { transform:translateX(4px); }
+
+/* Hero visual — right side */
+.hero-visual {
+  position:absolute; right:0; top:0; bottom:0;
+  width:50%; z-index:1;
+  display:flex; align-items:center; justify-content:center;
+}
+.hero-visual::before {
+  content:'';
+  position:absolute; left:0; top:0; bottom:0; width:180px;
+  background: linear-gradient(to right, var(--bg-deep), transparent);
+  z-index:2;
+}
+
+/* ╔══════════════════════════════════════╗
+   ║  ← ÜRÜN FOTOĞRAFI BURAYA            ║
+   ║  .hero-img-box içine <img> ekle      ║
+   ║  veya background-image kullan        ║
+   ╚══════════════════════════════════════╝ */
+.hero-img-box {
+  width:88%; height:75vh;
+  position:relative; overflow:hidden;
+  background: linear-gradient(135deg, #0d1926 0%, #0a1520 100%);
+  border:1px solid var(--blue-line);
+  display:flex; align-items:center; justify-content:center;
+}
+.hero-img-placeholder {
+  display:flex; flex-direction:column; align-items:center; gap:1.2rem;
+  opacity:0.25;
+}
+.hero-img-placeholder-icon {
+  font-size:5rem; color:var(--blue-bright);
+  font-family:var(--font-display); font-weight:700; letter-spacing:0.1em;
+}
+.hero-img-placeholder-text {
+  font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--grey-2);
+}
+.hero-img-corner {
+  position:absolute; width:20px; height:20px;
+  border-color:var(--blue-core); border-style:solid;
+}
+.hero-img-corner.tl { top:12px; left:12px; border-width:1px 0 0 1px; }
+.hero-img-corner.tr { top:12px; right:12px; border-width:1px 1px 0 0; }
+.hero-img-corner.bl { bottom:12px; left:12px; border-width:0 0 1px 1px; }
+.hero-img-corner.br { bottom:12px; right:12px; border-width:0 1px 1px 0; }
+
+
+/* ══════════════════════════════════════════
+   HOME — STATS BAR
+══════════════════════════════════════════ */
+.stats-bar {
+  position:relative; z-index:2;
+  border-top:1px solid var(--blue-line);
+  border-bottom:1px solid var(--blue-line);
+  background: var(--bg-card);
+  display:grid; grid-template-columns:repeat(4,1fr);
+}
+.stat-item {
+  padding:2rem 2.5rem;
+  border-right:1px solid var(--blue-line);
+  display:flex; flex-direction:column; gap:0.4rem;
+}
+.stat-item:last-child { border-right:none; }
+.stat-num {
+  font-family:var(--font-display); font-size:2.6rem; font-weight:700;
+  color:var(--blue-bright); line-height:1; letter-spacing:0.04em;
+}
+/* ╔════════════════════════════════════╗
+   ║  ← SPEC DEĞERLERİNİ GÜNCELLE      ║
+   ║  stat-num içindeki rakamlar        ║
+   ╚════════════════════════════════════╝ */
+.stat-label {
+  font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--grey-3);
+}
+
+/* ══════════════════════════════════════════
+   HOME — PRODUCTS (FEATURED)
+══════════════════════════════════════════ */
+.products-section { padding:7vw 4vw; position:relative; z-index:2; }
+
+.section-tag {
+  font-family:var(--font-display); font-size:0.7rem; font-weight:600;
+  letter-spacing:0.3em; text-transform:uppercase; color:var(--blue-bright);
+  display:flex; align-items:center; gap:0.8rem; margin-bottom:1rem;
+}
+.section-tag::before {
+  content:''; display:block; width:24px; height:1px; background:var(--blue-core);
+}
+.section-heading {
+  font-family:var(--font-display); font-size:clamp(2rem,4vw,3.8rem);
+  font-weight:700; line-height:1; letter-spacing:0.06em;
+  color:var(--grey-1); margin-bottom:4rem;
+}
+.section-heading em { font-style:normal; color:var(--blue-bright); }
+
+.products-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(360px,1fr));
+  gap:1px;
+  background: var(--blue-line);
+  border:1px solid var(--blue-line);
+}
+
+/* PRODUCT CARD */
+.product-card {
+  position:relative; background:var(--bg-card);
+  overflow:hidden;
+  transition:background 0.4s;
+}
+.product-card:hover { background:var(--bg-raised); }
+.product-card.featured { grid-column:span 2; }
+
+/* ╔═══════════════════════════════════════╗
+   ║  ← YENİ ÜRÜN EKLEMEK İÇİN            ║
+   ║  Bu .product-card bloğunu kopyala    ║
+   ║  data-category değerini değiştir     ║
+   ║  onclick="showProduct('slug')" ekle  ║
+   ╚═══════════════════════════════════════╝ */
+
+.card-visual-area {
+  aspect-ratio:16/9; position:relative; overflow:hidden;
+  background: linear-gradient(135deg, var(--bg-deep), var(--bg-base));
+  display:flex; align-items:center; justify-content:center;
+}
+.product-card.featured .card-visual-area { aspect-ratio:21/9; }
+
+.card-placeholder {
+  display:flex; flex-direction:column; align-items:center; gap:0.8rem;
+  opacity:0.12;
+}
+/* ╔═══════════════════════════════════════╗
+   ║  ← ÜRÜN FOTOĞRAFI EKLE               ║
+   ║  .card-visual-area içine:             ║
+   ║  <img src="..." class="card-img">     ║
+   ╚═══════════════════════════════════════╝ */
+.card-img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform 0.8s ease, filter 0.5s;
+  filter:brightness(0.8) saturate(0.7);
+}
+.product-card:hover .card-img { transform:scale(1.05); filter:brightness(0.65) saturate(0.5); }
+
+.card-placeholder-glyph {
+  font-family:var(--font-display); font-size:4rem; font-weight:700;
+  color:var(--blue-bright); letter-spacing:0.1em;
+}
+.card-placeholder-txt {
+  font-size:0.6rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--grey-2);
+}
+
+.card-corner {
+  position:absolute; width:16px; height:16px;
+  border-color:var(--blue-core); border-style:solid; opacity:0.5;
+  transition:opacity 0.3s;
+}
+.product-card:hover .card-corner { opacity:1; }
+.card-corner.tl { top:10px; left:10px; border-width:1px 0 0 1px; }
+.card-corner.br { bottom:10px; right:10px; border-width:0 1px 1px 0; }
+
+.card-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(8,12,18,0.95) 0%, rgba(8,12,18,0.3) 50%, transparent 100%);
+}
+.card-content {
+  position:absolute; bottom:0; left:0; right:0; padding:2rem;
+}
+.card-cat {
+  font-family:var(--font-display); font-size:0.65rem; font-weight:600;
+  letter-spacing:0.25em; text-transform:uppercase; color:var(--cyan);
+  margin-bottom:0.5rem; display:block;
+}
+.card-name {
+  font-family:var(--font-display);
+  font-size:clamp(1.3rem,2.5vw,2rem);
+  font-weight:700; color:var(--grey-1);
+  line-height:1.05; letter-spacing:0.05em; margin-bottom:0.7rem;
+}
+.card-desc {
+  font-size:0.82rem; color:var(--grey-2); line-height:1.7;
+  max-width:500px; opacity:0; transform:translateY(8px);
+  transition:opacity 0.35s, transform 0.35s;
+}
+.product-card:hover .card-desc { opacity:1; transform:translateY(0); }
+.card-cta {
+  position:absolute; top:1.5rem; right:1.5rem;
+  width:40px; height:40px; border:1px solid var(--blue-line);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--blue-bright); font-size:0.9rem;
+  opacity:0; transform:scale(0.8);
+  transition:opacity 0.3s, transform 0.3s, background 0.3s;
+  background:rgba(8,12,18,0.7);
+}
+.product-card:hover .card-cta {
+  opacity:1; transform:scale(1);
+  background:var(--blue-core);
+  color:#fff;
+}
+
+/* COMING SOON CARD */
+.card-coming {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  min-height:280px; gap:1rem;
+  border:1px dashed var(--grey-4);
+  background:transparent;
+  opacity:0.4;
+}
+.card-coming-icon {
+  font-family:var(--font-display); font-size:2rem; font-weight:700;
+  color:var(--grey-3); letter-spacing:0.1em;
+}
+.card-coming-txt {
+  font-size:0.68rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--grey-3);
+}
+
+/* ══════════════════════════════════════════
+   HOME — CATEGORY FILTER
+══════════════════════════════════════════ */
+.category-section {
+  padding:0 4vw;
+  position:sticky; top:66px; z-index:90;
+  background:rgba(8,12,18,0.95); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--blue-line);
+}
+.category-tabs { display:flex; overflow-x:auto; scrollbar-width:none; }
+.category-tabs::-webkit-scrollbar { display:none; }
+.cat-tab {
+  padding:1rem 1.8rem;
+  font-family:var(--font-display); font-size:0.78rem; font-weight:500;
+  letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--grey-3); background:none; border:none;
+  border-bottom:2px solid transparent;
+  transition:all 0.25s; white-space:nowrap;
+}
+.cat-tab:hover { color:var(--grey-1); }
+.cat-tab.active { color:var(--blue-bright); border-bottom-color:var(--blue-bright); }
+
+/* ══════════════════════════════════════════
+   HOME — BRAND STORY
+══════════════════════════════════════════ */
+.brand-section {
+  padding:8vw 4vw;
+  display:grid; grid-template-columns:1fr 1fr; gap:8vw;
+  border-top:1px solid var(--blue-line);
+  position:relative; z-index:2;
+}
+.brand-visual {
+  position:relative; background:var(--bg-card);
+  border:1px solid var(--blue-line); overflow:hidden;
+  min-height:420px; display:flex; align-items:center; justify-content:center;
+}
+.brand-visual-bg {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 60% 60% at 30% 40%, rgba(42,108,246,0.07), transparent),
+    radial-gradient(ellipse 40% 60% at 70% 70%, rgba(48,214,232,0.04), transparent);
+}
+.brand-visual-circuit {
+  position:absolute; inset:0; opacity:0.06;
+  background-image:
+    linear-gradient(var(--blue-core) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blue-core) 1px, transparent 1px);
+  background-size:30px 30px;
+}
+.brand-visual-logo {
+  position:relative; z-index:1; text-align:center;
+}
+.brand-visual-wordmark {
+  font-family:var(--font-display); font-size:5rem; font-weight:700;
+  letter-spacing:0.25em; color:rgba(42,108,246,0.2); line-height:1;
+}
+.brand-visual-tagline {
+  font-size:0.62rem; letter-spacing:0.4em; text-transform:uppercase;
+  color:rgba(77,143,255,0.2); margin-top:0.5rem;
+}
+.brand-frame {
+  position:absolute; inset:1.5rem; border:1px solid var(--blue-line);
+  pointer-events:none;
+}
+.brand-frame-corner {
+  position:absolute; width:12px; height:12px; border-color:var(--blue-core); border-style:solid;
+}
+.brand-frame-corner.tl { top:-1px; left:-1px; border-width:1px 0 0 1px; }
+.brand-frame-corner.tr { top:-1px; right:-1px; border-width:1px 1px 0 0; }
+.brand-frame-corner.bl { bottom:-1px; left:-1px; border-width:0 0 1px 1px; }
+.brand-frame-corner.br { bottom:-1px; right:-1px; border-width:0 1px 1px 0; }
+
+.brand-content { display:flex; flex-direction:column; justify-content:center; }
+.brand-tag {
+  font-family:var(--font-display); font-size:0.7rem; font-weight:600;
+  letter-spacing:0.3em; text-transform:uppercase; color:var(--blue-bright);
+  display:flex; align-items:center; gap:0.8rem; margin-bottom:1.5rem;
+}
+.brand-tag::before { content:''; display:block; width:24px; height:1px; background:var(--blue-core); }
+.brand-heading {
+  font-family:var(--font-display);
+  font-size:clamp(2rem,3.5vw,3.2rem);
+  font-weight:700; line-height:1.05; letter-spacing:0.05em;
+  color:var(--grey-1); margin-bottom:2rem;
+}
+.brand-heading em { font-style:normal; color:var(--blue-bright); display:block; }
+
+/* ╔════════════════════════════════════════╗
+   ║  ← MARKA METNİ BURAYA                 ║
+   ║  .brand-text paragraflarını güncelle  ║
+   ║  Kim, ne zaman, neden, nerede?         ║
+   ╚════════════════════════════════════════╝ */
+.brand-text {
+  font-size:0.9rem; line-height:2; color:var(--grey-2); font-weight:300;
+  margin-bottom:1.5rem;
+}
+
+.brand-pillars {
+  display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;
+  margin-top:2.5rem; padding-top:2.5rem; border-top:1px solid var(--blue-line);
+}
+.brand-pillar-label {
+  font-family:var(--font-display); font-size:0.65rem; font-weight:600;
+  letter-spacing:0.22em; text-transform:uppercase; color:var(--grey-3); margin-bottom:0.4rem;
+}
+.brand-pillar-val {
+  font-family:var(--font-display); font-size:1.1rem; font-weight:600;
+  color:var(--blue-bright); letter-spacing:0.08em;
+}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer {
+  padding:2.5rem 4vw;
+  border-top:1px solid var(--blue-line);
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+  background:var(--bg-deep); position:relative; z-index:2;
+}
+.footer-logo {
+  font-family:var(--font-display); font-size:1.3rem; font-weight:700;
+  letter-spacing:0.2em; color:var(--grey-2);
+  display:flex; align-items:center; gap:0.4rem;
+}
+.footer-logo-dot { width:5px; height:5px; border-radius:50%; background:var(--blue-core); }
+.footer-copy {
+  font-size:0.68rem; letter-spacing:0.12em; color:var(--grey-3);
+}
+
+/* ══════════════════════════════════════════
+   PRODUCT DETAIL PAGE
+══════════════════════════════════════════ */
+.back-btn {
+  display:inline-flex; align-items:center; gap:0.7rem;
+  font-family:var(--font-display); font-size:0.75rem; font-weight:600;
+  letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--grey-2); background:none; border:none;
+  padding:2rem 4vw; margin-top:66px; transition:color 0.25s;
+}
+.back-btn:hover { color:var(--blue-bright); }
+.back-btn::before { content:'←'; font-size:1rem; transition:transform 0.3s; }
+.back-btn:hover::before { transform:translateX(-4px); }
+
+/* Poster hero */
+.detail-poster {
+  min-height:88vh; position:relative; overflow:hidden;
+  display:grid; grid-template-columns:1fr 1fr;
+  background:var(--bg-base);
+}
+
+/* ╔═══════════════════════════════════════╗
+   ║  ← ÜRÜN DETAY FOTOĞRAFI               ║
+   ║  .detail-poster-img içine <img> ekle  ║
+   ║  Yüksek kaliteli ürün görseli önerilir║
+   ╚═══════════════════════════════════════╝ */
+.detail-poster-img {
+  position:relative; overflow:hidden;
+  background: linear-gradient(135deg, #0a1220, #0d1a2e);
+  display:flex; align-items:center; justify-content:center;
+}
+.detail-poster-placeholder {
+  display:flex; flex-direction:column; align-items:center; gap:1rem; opacity:0.15;
+}
+.detail-poster-glyph {
+  font-family:var(--font-display); font-size:9rem; font-weight:700;
+  color:var(--blue-bright); letter-spacing:0.05em; line-height:1;
+}
+.detail-poster-scanline {
+  position:absolute; left:0; right:0; height:1px;
+  background:linear-gradient(to right, transparent, var(--cyan), transparent);
+  opacity:0.4; animation:scan 3.5s linear infinite;
+}
+.detail-poster-corner {
+  position:absolute; width:24px; height:24px;
+  border-color:var(--blue-core); border-style:solid;
+}
+.detail-poster-corner.tl { top:20px; left:20px; border-width:1px 0 0 1px; }
+.detail-poster-corner.br { bottom:20px; right:20px; border-width:0 1px 1px 0; }
+
+.detail-poster-info {
+  padding:5vw; display:flex; flex-direction:column; justify-content:center;
+  background:var(--bg-card); border-left:1px solid var(--blue-line);
+  position:relative; overflow:hidden;
+}
+.detail-poster-info::before {
+  content:'';
+  position:absolute; inset:0;
+  background: radial-gradient(ellipse 80% 80% at 0% 50%, rgba(42,108,246,0.05), transparent);
+}
+.detail-cat {
+  font-family:var(--font-display); font-size:0.7rem; font-weight:600;
+  letter-spacing:0.3em; text-transform:uppercase; color:var(--cyan);
+  margin-bottom:1.2rem; position:relative;
+  display:flex; align-items:center; gap:0.7rem;
+}
+.detail-cat::before { content:''; display:block; width:20px; height:1px; background:var(--cyan); }
+.detail-name {
+  font-family:var(--font-display);
+  font-size:clamp(2.2rem,4.5vw,5rem);
+  font-weight:700; line-height:0.95; letter-spacing:0.05em;
+  color:var(--grey-1); margin-bottom:0.6rem; position:relative;
+}
+.detail-name em { font-style:normal; color:var(--blue-bright); display:block; }
+.detail-model {
+  font-family:var(--font-display); font-size:0.78rem; font-weight:500;
+  letter-spacing:0.22em; color:var(--grey-3); text-transform:uppercase;
+  margin-bottom:2rem; position:relative;
+}
+/* ╔════════════════════════════════════════╗
+   ║  ← ÜRÜN KISA TANITIM METNİ            ║
+   ║  .detail-tagline içeriğini güncelle   ║
+   ╚════════════════════════════════════════╝ */
+.detail-tagline {
+  font-size:0.95rem; line-height:1.85; color:var(--grey-2);
+  max-width:420px; margin-bottom:2.5rem;
+  padding-bottom:2.5rem; border-bottom:1px solid var(--blue-line);
+  position:relative;
+}
+.detail-specs-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; position:relative;
+}
+.spec-item {}
+.spec-label {
+  font-family:var(--font-display); font-size:0.62rem; font-weight:600;
+  letter-spacing:0.25em; text-transform:uppercase; color:var(--grey-3);
+  margin-bottom:0.35rem;
+}
+.spec-val {
+  font-family:var(--font-display); font-size:1.15rem; font-weight:600;
+  color:var(--grey-1); letter-spacing:0.06em;
+}
+.spec-val .unit { font-size:0.75rem; color:var(--blue-bright); margin-left:0.2rem; }
+
+/* Highlight quote banner */
+.detail-banner {
+  background:var(--bg-base); border-top:1px solid var(--blue-line);
+  border-bottom:1px solid var(--blue-line);
+  padding:4.5vw 4vw; text-align:center; position:relative; overflow:hidden;
+}
+.detail-banner::before {
+  content:'';
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse 50% 100% at 50% 50%, rgba(42,108,246,0.05), transparent);
+}
+/* ╔════════════════════════════════════════╗
+   ║  ← ÜRÜN AFIŞI / VURGULAYıCı ALINTI   ║
+   ║  .detail-quote içeriğini güncelle     ║
+   ╚════════════════════════════════════════╝ */
+.detail-quote {
+  font-family:var(--font-display);
+  font-size:clamp(1.5rem,3.5vw,3.2rem);
+  font-weight:700; color:var(--grey-1); line-height:1.15;
+  letter-spacing:0.05em; max-width:820px; margin:0 auto; position:relative;
+}
+.detail-quote em { font-style:normal; color:var(--blue-bright); }
+
+/* Feature sections */
+.detail-features {
+  padding:7vw 4vw; display:grid;
+  grid-template-columns:1fr 1.2fr; gap:7vw; align-items:start;
+}
+.detail-features-num {
+  font-family:var(--font-display); font-size:7rem; font-weight:700;
+  color:rgba(42,108,246,0.07); line-height:1; margin-bottom:-2rem;
+}
+.detail-features-heading {
+  font-family:var(--font-display); font-size:clamp(1.8rem,3vw,2.8rem);
+  font-weight:700; color:var(--grey-1); line-height:1.05;
+  letter-spacing:0.05em; margin-bottom:2rem;
+}
+.detail-features-heading em { font-style:normal; color:var(--blue-bright); }
+
+/* ╔════════════════════════════════════════╗
+   ║  ← ÜRÜN DETAYLI TANITIM METNİ        ║
+   ║  .detail-body paragraflarını güncelle ║
+   ╚════════════════════════════════════════╝ */
+.detail-body {
+  font-size:0.9rem; line-height:2.1; color:var(--grey-2); font-weight:300;
+  margin-bottom:1.5rem;
+}
+
+.detail-feature-list {
+  margin-top:2rem; display:flex; flex-direction:column; gap:0.8rem;
+}
+.detail-feature-item {
+  display:flex; align-items:flex-start; gap:1rem;
+  font-size:0.85rem; color:var(--grey-2); line-height:1.6;
+}
+.detail-feature-item::before {
+  content:'→'; color:var(--blue-bright); font-size:0.9rem; flex-shrink:0; margin-top:0.1rem;
+}
+
+/* Gallery */
+.detail-gallery {
+  padding:0 4vw 7vw;
+  display:grid; grid-template-columns:2fr 1fr 1fr; gap:2px;
+  background:var(--blue-line);
+}
+/* ╔═════════════════════════════════════╗
+   ║  ← GALERİ FOTOĞRAFLARI              ║
+   ║  Her .gallery-cell içine <img> ekle ║
+   ╚═════════════════════════════════════╝ */
+.gallery-cell {
+  background:var(--bg-card); overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  min-height:220px; position:relative;
+}
+.gallery-cell:first-child { grid-row:span 2; min-height:440px; }
+.gallery-cell-placeholder {
+  font-size:0.6rem; letter-spacing:0.3em; text-transform:uppercase;
+  color:var(--grey-4); pointer-events:none;
+}
+.gallery-cell-num {
+  position:absolute; bottom:0.8rem; right:1rem;
+  font-family:var(--font-display); font-size:0.6rem; font-weight:600;
+  letter-spacing:0.2em; color:var(--blue-line);
+}
+
+/* ══════════════════════════════════════════
+   REVEAL ANIMATION
+══════════════════════════════════════════ */
+.reveal {
+  opacity:0; transform:translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+/* 1. EKRAN BÖLÜNDÜĞÜNDE VEYA TABLETLERDE (1100px'e kadar) */
+@media (max-width:1100px) {
+  .hero { display: flex; flex-direction: column; text-align: center; padding-top: 100px; min-height: auto; }
+  .hero-content { max-width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 2; }
+  
+  /* Kritik Çözüm: Alt metin sadece dar ekrana geçildiğinde %100 genişlik alsın */
+  .hero-slogan { max-width: 100%; padding: 0 1rem; } 
+  
+  .hero-visual { position: relative; display: flex; justify-content: center; width: 100%; margin-top: 3rem; margin-bottom: 3rem; z-index: 1; }
+  .hero-visual::before { display: none; }
+  .hero-img-box { width: 100%; height: auto; min-height: 300px; aspect-ratio: 16/9; }
+  
+  .brand-section { grid-template-columns: 1fr; display: flex; flex-direction: column-reverse; gap: 2rem; }
+  .brand-visual { display: flex; justify-content: center; width: 100%; min-height: 250px; }
+  
+  .stats-bar { grid-template-columns: 1fr 1fr; }
+  .stat-item { border-bottom: 1px solid var(--blue-line); }
+  .stat-item:nth-child(2), .stat-item:nth-child(4) { border-right: none; }
+
+  .products-grid { grid-template-columns: 1fr; }
+  .product-card.featured { grid-column: span 1; }
+  .detail-poster { grid-template-columns: 1fr; }
+  .detail-poster-img { min-height: 55vw; }
+  .detail-features { grid-template-columns: 1fr; gap: 2rem; }
+  .detail-specs-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .brand-pillars { grid-template-columns: 1fr; } 
+  .detail-gallery { grid-template-columns: 1fr 1fr; }
+  .detail-gallery .gallery-cell:first-child { grid-row: auto; min-height: 220px; }
+  
+  .hero-title { font-size: clamp(2.5rem, 8vw, 4rem); }
+  .section-heading { font-size: clamp(1.8rem, 6vw, 2.5rem); }
+  .brand-heading { font-size: clamp(1.8rem, 6vw, 2.5rem); }
+}
+
+/* 2. SADECE TELEFON EKRANLARINDA (768px'e kadar) */
+@media (max-width:768px) {
+  /* Sadece ekran tam telefon boyutuna indiğinde üst menüyü gizle ve hamburger menüyü (üç çizgi) aç */
+  .nav-links { display: none; }
+  .nav-menu { display: flex; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#" onclick="showHome(); scrollTo(0,0)">
+    <img src="SulpaLogo.svg" alt="SULPA Logo" style="height: 72px; width: auto; filter: brightness(0) invert(1);">
+    SULPA
+  </a>
+
+<ul class="nav-links">
+    <li><a href="#" class="cat-tab active">TÜMÜ</a></li>
+    <li><a href="#" class="cat-tab">ÜRÜNLER</a></li>
+    <li><a href="#" class="cat-tab">HAKKIMIZDA</a></li>
+  </ul>
+  <div class="nav-menu" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════
+     HOME PAGE
+════════════════════════════════════════ -->
+<div class="page active" id="homePage">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        FPV &amp; Freestyle — Motor Driver Technology
+      </div>
+      <h1 class="hero-title">
+        SULPA
+        <!-- ╔══════════════════════════════╗
+             ║ ← SLOGAN / BAŞLIK GÜNCELLE  ║
+             ╚══════════════════════════════╝ -->
+        <em class="accent">Yüksek Mühendislik</em>
+        <span class="sub">Erişilebilir Maliyet</span>
+      </h1>
+      <!-- ╔════════════════════════════════════╗
+           ║ ← KISA MARKA AÇIKLAMASI (1-2 cml) ║
+           ╚════════════════════════════════════╝ -->
+      <p class="hero-slogan">
+        FPV yarış ve freestyle pilotları için tasarlanmış S38-75-A1; profesyonel mühendislik anlayışını erişilebilir bir fiyat noktasında sunar.
+      </p>
+      <a href="#" class="hero-cta" onclick="showProduct('4in1-driver')">
+        S38-75-A1 — 4in1 Motor Driver
+        <span class="hero-cta-arrow">→</span>
+      </a>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-img-box">
+        <!-- ╔══════════════════════════════════╗
+             ║ ← ÜRÜN FOTOĞRAFI EKLE            ║
+             ║ <img src="urun.jpg"              ║
+             ║      style="width:100%;          ║
+             ║      height:100%;                ║
+             ║      object-fit:cover">          ║
+             ╚══════════════════════════════════╝ -->
+        <img src="S38-75-A1_2.png" style="height: 100%;height: 100%; object-fit: contain;">
+        <div class="hero-scanline"></div>
+        <div class="hero-img-corner tl"></div>
+        <div class="hero-img-corner tr"></div>
+        <div class="hero-img-corner bl"></div>
+        <div class="hero-img-corner br"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <!-- ╔════════════════════════════════════════╗
+       ║ ← TÜM stat-num DEĞERLERİNİ GÜNCELLE  ║
+       ║ Gerçek ürün spec değerlerini gir      ║
+       ╚════════════════════════════════════════╝ -->
+  <div class="stats-bar">
+    <div class="stat-item reveal">
+      <div class="stat-num">75<span style="font-size:1.4rem;color:var(--grey-3)">A</span></div>
+      <div class="stat-label">Sürekli Akım</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">3<span style="font-size:1.4rem;color:var(--grey-3)">–</span>8S</div>
+      <div class="stat-label">Voltaj Aralığı</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">42.7<span style="font-size:1.4rem;color:var(--grey-3)">×</span>41.5</div>
+      <div class="stat-label">Boyut (mm)</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">—</div>
+      <div class="stat-label">Ağırlık (yakında)</div>
+    </div>
+  </div>
+
+  <!-- CATEGORY + PRODUCTS -->
+  <div class="category-section">
+    <div class="category-tabs">
+      <button class="cat-tab active" onclick="filterCat('all',this)">Tümü</button>
+      <button class="cat-tab" onclick="filterCat('esc',this)">ESC / Motor Driver</button>
+      <!-- ╔══════════════════════════════════╗
+           ║ ← YENİ KATEGORİ EKLEMEK İÇİN    ║
+           ║ Bu <button> satırını kopyala     ║
+           ║ filterCat('slug',this) yaz       ║
+           ╚══════════════════════════════════╝ -->
+      <button class="cat-tab" onclick="filterCat('fc',this)">Flight Controller (Yakında)</button>
+      <!--<button class="cat-tab" onclick="filterCat('diger',this)">Diğer</button>-->
+    </div>
+  </div>
+
+  <section class="products-section">
+    <div class="section-tag reveal">Ürün Kataloğu</div>
+    <div class="section-heading reveal">Mevcut <em>Ürünler</em></div>
+
+    <div class="products-grid" id="productsGrid">
+
+      <!-- ═══ ÜRÜN 1: 4in1 Motor Driver (FEATURED) ═══ -->
+      <!-- ╔══════════════════════════════════════════╗
+           ║ ← KART FOTOĞRAFI:                        ║
+           ║ .card-visual-area içine:                 ║
+           ║ <img src="..." class="card-img">         ║
+           ╚══════════════════════════════════════════╝ -->
+      <div class="product-card featured" data-category="esc" onclick="showProduct('4in1-driver')">
+        <div class="card-visual-area">
+          <img src="S38-75-A1_2.png" style="width: 100%; height: 100%; object-fit: contain;">
+          <div class="card-corner tl"></div>
+          <div class="card-corner br"></div>
+        </div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <span class="card-cat">ESC / Motor Driver</span>
+          <!-- ╔═══════════════════════════════╗
+               ║ ← ÜRÜN ADI / MODELİ GÜNCELLE ║
+               ╚═══════════════════════════════╝ -->
+          <h3 class="card-name">SULPA S38-75-A1<br>4in1 Motor Driver</h3>
+          <p class="card-desc">
+            <!-- ╔══════════════════════════════════╗
+                 ║ ← KISA AÇIKLAMA (kart üstünde)   ║
+                 ╚══════════════════════════════════╝ -->
+            Dört motoru tek karttan, tam hassasiyetle. FPV ve freestyle için optimize edilmiş sürücü sistemi.
+          </p>
+        </div>
+        <div class="card-cta">↗</div>
+      </div>
+
+      <!-- ═══ COMING SOON — FC ═══ -->
+      <div class="product-card" data-category="fc" style="cursor:default;">
+        <div class="card-coming">
+          <div class="card-coming-icon">FC</div>
+          <div class="card-coming-txt">Flight Controller — Yakında</div>
+        </div>
+      </div>
+
+      <!-- ═══ COMING SOON — Diğer ═══ -->
+      <!-- ╔══════════════════════════════════════════╗
+           ║ ← YENİ ÜRÜN EKLEMEK İSTEYİNCE           ║
+           ║ Bu "coming soon" kartını silin ve         ║
+           ║ yukarıdaki ürün kartını buraya kopyala   ║
+           ╚══════════════════════════════════════════╝
+      <div class="product-card" data-category="diger" style="cursor:default;">
+        <div class="card-coming">
+          <div class="card-coming-icon">???</div>
+          <div class="card-coming-txt">Gelecek Ürün — Yakında</div>
+        </div>
+      </div> -->
+
+    </div>
+  </section>
+
+  <!-- BRAND STORY -->
+  <section class="brand-section">
+    <div class="brand-visual reveal">
+      <div class="brand-visual-bg"></div>
+      <div class="brand-visual-circuit"></div>
+      <div class="brand-frame">
+        <div class="brand-frame-corner tl"></div>
+        <div class="brand-frame-corner tr"></div>
+        <div class="brand-frame-corner bl"></div>
+        <div class="brand-frame-corner br"></div>
+      </div>
+     <div class="brand-visual-logo">
+        <img src="SulpaLogo.svg" alt="SULPA" style="width: 80%; max-width: 350px; height: auto; filter: brightness(0) invert(1);">
+      </div>
+    </div>
+
+    <div class="brand-content">
+      <div class="brand-tag reveal">Hakkımızda</div>
+      <!-- ╔════════════════════════════════════╗
+           ║ ← MARKA BAŞLIĞI GÜNCELLE           ║
+           ╚════════════════════════════════════╝ -->
+      <h2 class="brand-heading reveal">
+        Yerli Tasarım
+        <em>Sınır Tanımayan Performans</em>
+      </h2>
+      <!-- ╔══════════════════════════════════════════════════╗
+           ║ ← MARKA METNİ — LÜTFEN GÜNCELLE                 ║
+           ║ Kimsiniz? Ne zaman kuruldunuz? Neden?           ║
+           ║ Nerede üretiyorsunuz? Misyonunuz nedir?         ║
+           ╚══════════════════════════════════════════════════╝ -->
+      <p class="brand-text reveal">
+        SULPA, FPV ve freestyle drone pilotlarının en zorlu uçuş koşullarında bile güvenebileceği, yüksek dayanıklılığa sahip donanımlar üretmek vizyonuyla yola çıktı. Amacımız sadece standart bir motor sürücüsü yapmak değil; donanım sınırlarını zorlayan, tamamen kendi mühendisliğimizle geliştirilmiş yerli bir ekosistem kurmak.
+      </p>
+      <p class="brand-text reveal">
+        Tasarımından PCB dizgisine, komponent seçiminden zorlu saha testlerine kadar her aşaması Türkiye'de yürütülen SULPA, ithal muadillerinin ötesinde bir kalite standardı sunmayı hedefler. S38-75-A1 ile başlayan bu mühendislik yolculuğunda, pilotların anlık tepki ve kesintisiz güç ihtiyaçlarını merkeze alıyoruz.
+      </p>
+      <div class="brand-pillars reveal">
+        <!-- ╔═══════════════════════════════════╗
+             ║ ← MARKA DEĞERLERİNİ GÜNCELLE     ║
+             ╚═══════════════════════════════════╝ -->
+        <div>
+          <div class="brand-pillar-label">Tasarım Odağı</div>
+          <div class="brand-pillar-val">Performans, Zerafet</div>
+        </div>
+        <div>
+          <div class="brand-pillar-label">Hedef Kitle</div>
+          <div class="brand-pillar-val">Hoby ve FPV Pilotları</div>
+        </div>
+        <div>
+          <div class="brand-pillar-label">Üretim</div>
+          <!-- ╔══════════════════════════════╗
+               ║ ← Nerede üretiliyor?         ║
+               ╚══════════════════════════════╝ -->
+          <div class="brand-pillar-val">Bursa-Türkiye</div>
+        </div>
+        <div>
+          <div class="brand-pillar-label">Kuruluş</div>
+          <!-- ╔══════════════════════════════╗
+               ║ ← Kuruluş yılı               ║
+               ╚══════════════════════════════╝ -->
+          <div class="brand-pillar-val">2026</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <img src="SulpaLogo.svg" alt="SULPA Logo" style="height: 72px; width: auto; filter: brightness(0) invert(1);">
+    <!-- ╔══════════════════════════════╗
+         ║ ← Yıl ve şirket adı güncelle║
+         ╚══════════════════════════════╝ -->
+    <div class="footer-copy">© 2026 SULPA — Tüm Hakları Saklıdır</div>
+  </footer>
+
+</div><!-- /homePage -->
+
+<!-- ════════════════════════════════════════
+     PRODUCT DETAIL PAGE: 4in1 Motor Driver
+════════════════════════════════════════ -->
+<div class="page" id="productPage">
+
+  <button class="back-btn" onclick="showHome()">Geri Dön</button>
+
+  <!-- POSTER HERO -->
+  <div class="detail-poster">
+    <div class="detail-poster-img">
+      <!-- ╔═══════════════════════════════════════╗
+           ║ ← DETAY SAYFASI ANA FOTOĞRAFI         ║
+           ║ Buraya yüksek kaliteli ürün görseli   ║
+           ║ <img src="..." style="width:100%;      ║
+           ║  height:100%; object-fit:cover">       ║
+           ╚═══════════════════════════════════════╝ -->
+      <img src="S38-75-A1_2.png" style="width: 100%; height: 100%; object-fit: contain;">
+      <div class="detail-poster-corner tl"></div>
+      <div class="detail-poster-corner br"></div>
+    </div>
+
+    <div class="detail-poster-info">
+      <div class="detail-cat">ESC / Motor Driver</div>
+      <!-- ╔══════════════════════════════╗
+           ║ ← ÜRÜN ADI GÜNCELLE          ║
+           ╚══════════════════════════════╝ -->
+      <h1 class="detail-name">
+        S38-75-A1
+        <em>4in1 Motor Driver</em>
+      </h1>
+      <div class="detail-model">Model: SULPA S38-75-A1</div>
+
+      <!-- ╔════════════════════════════════════╗
+           ║ ← ÜRÜN KISA TANITIMI GÜNCELLE      ║
+           ╚════════════════════════════════════╝ -->
+      <p class="detail-tagline">
+        Dört motor kanalını tek, kompakt karttan yönetin. SULPA 4in1, yarış ve freestyle senaryolarının her ikisi için de sıfırdan optimize edilmiş bir motor sürücü sistemidir.
+      </p>
+
+      <!-- ╔════════════════════════════════════╗
+           ║ ← SPEC DEĞERLERİNİ GÜNCELLE        ║
+           ║ Gerçek teknik değerleri girin       ║
+           ╚════════════════════════════════════╝ -->
+      <div class="detail-specs-grid">
+        <div class="spec-item">
+          <div class="spec-label">Sürekli Akım</div>
+          <div class="spec-val">75<span class="unit">A</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Pik Akım</div>
+          <div class="spec-val">150<span class="unit">A</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Voltaj</div>
+          <div class="spec-val">3–8<span class="unit">S</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Protokol</div>
+          <!-- ╔══════════════════════════════╗
+               ║ ← Protokol bilgisini güncelle║
+               ╚══════════════════════════════╝ -->
+          <div class="spec-val" style="font-size:0.78rem;line-height:1.5">AM32<br>DSHOT600/300/150<br>Oneshot · Multishot · PWM</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">PWM Frekansı</div>
+          <div class="spec-val" style="font-size:0.88rem">8–128<span class="unit">kHz</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Boyut</div>
+          <div class="spec-val">42.7×41.5<span class="unit">mm</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Ağırlık</div>
+          <div class="spec-val" style="font-size:0.9rem;color:var(--grey-3)">Yakında</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HIGHLIGHT BANNER -->
+  <!-- ╔════════════════════════════════════════╗
+       ║ ← VURGULAYICI AFİŞ SLOGANI GÜNCELLE   ║
+       ╚════════════════════════════════════════╝ 
+  <div class="detail-banner">
+    <p class="detail-quote">
+      Yerli ürün, tek sinyal, <em>sonsuz hassasiyet.</em>
+    </p>
+  </div>
+-->
+  <!-- FEATURE / STORY SECTION -->
+  <div class="detail-features">
+    <div>
+      <div class="detail-features-num reveal">01</div>
+      <!-- ╔════════════════════════════════════╗
+           ║ ← BÖLÜM BAŞLIĞI GÜNCELLE           ║
+           ╚════════════════════════════════════╝ -->
+      <h2 class="detail-features-heading reveal">
+        S38-75-A1 <em>Nedir?</em>
+      </h2>
+    </div>
+    <div>
+      <!-- ╔════════════════════════════════════════════╗
+           ║ ← ÜRÜN DETAYLI AÇIKLAMA — LÜTFEN GÜNCELLE ║
+           ║ Ürünün nasıl tasarlandığı, ne sorunu        ║
+           ║ çözdüğü, teknik avantajları neler?          ║
+           ╚════════════════════════════════════════════╝ -->
+      <p class="detail-body reveal">
+        SULPA 4in1, her motor kanalını bağımsız olarak izleyen ve kontrol eden bir mimari üzerine kurulmuştur. Geleneksel ESC tasarımlarının termal ve sinyal kısıtlamalarını aşmak için sıfırdan mühendislik anlayışıyla geliştirilmiştir.
+      </p>
+      <!-- ╔═════════════════════════════════════════╗
+           ║ ← ÖZELLİK LİSTESİNİ GÜNCELLE           ║
+           ║ Ürünün öne çıkan özelliklerini listele   ║
+           ╚═════════════════════════════════════════╝ -->
+      <div class="detail-feature-list reveal">
+        <div class="detail-feature-item">Yüksek frekanslı sinyal işleme kapasitesine sahip güçlü 32-bit MCU mimarisi</div>
+        <div class="detail-feature-item">Üstün soğutma performansı ve düşük iç direnç sunan orijinal Toshiba MOSFET dizilimi</div>
+        <div class="detail-feature-item">AM32 altyapısı ile DSHOT600/300/150 protokollerinde tam uyumluluk ve sıfır gecikme</div>
+        <div class="detail-feature-item">Yüksek akım taşıma kapasitesini ve termal dağılımı maksimize eden çok katmanlı (multi-layer) PCB tasarımı</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="detail-gallery">
+    <!-- ╔════════════════════════════════════════╗
+         ║ ← GALERİ FOTOĞRAFLARI — GÜNCELLE      ║
+         ║ Her hücreye <img src="..."> ekle       ║
+         ╚════════════════════════════════════════╝ -->
+    <div class="gallery-cell">
+      <img src="S38-75-A1_2.png" style="width: 100%; height: 100%; object-fit: contain;">
+      <div class="gallery-cell-num">01</div>
+    </div>
+    <div class="gallery-cell">
+      <img src="S38-75-A1_1.png" style="width: 100%; height: 100%; object-fit: contain;">
+      <div class="gallery-cell-num">02</div>
+    </div>
+    <div class="gallery-cell">
+      <img src="S38-75-A1_3.png" style="width: 100%; height: 100%; object-fit: contain;">
+      <div class="gallery-cell-num">03</div>
+    </div>
+    <div class="gallery-cell">
+      <img src="S38-75-A1_4.png" style="width: 100%; height: 100%; object-fit: contain;">
+      <div class="gallery-cell-num">04</div>
+    </div>
+  </div>
+
+  <footer>
+    <img src="SulpaLogo.svg" alt="SULPA Logo" style="height: 72px; width: auto; filter: brightness(0) invert(1);">
+    <div class="footer-copy">© 2026 SULPA — Tüm Hakları Saklıdır</div>
+  </footer>
+
+</div><!-- /productPage -->
+
+<script>
+/* ── PAGES ───────────────────────────── */
+function showProduct(slug){
+  document.getElementById('homePage').classList.remove('active');
+  document.getElementById('productPage').classList.add('active');
+  window.scrollTo(0,0);
+}
+function showHome(){
+  document.getElementById('productPage').classList.remove('active');
+  document.getElementById('homePage').classList.add('active');
+  window.scrollTo(0,0);
+  initReveal();
+}
+
+/* ── CATEGORY FILTER ─────────────────── */
+function filterCat(cat, btn){
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.product-card').forEach(card=>{
+    card.style.display = (cat==='all' || card.dataset.category===cat) ? '' : 'none';
+  });
+}
+
+/* ── SCROLL REVEAL ───────────────────── */
+function initReveal(){
+  const els = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting) setTimeout(()=>e.target.classList.add('visible'), i*70);
+    });
+  },{threshold:0.1});
+  els.forEach(el=>{ el.classList.remove('visible'); obs.observe(el); });
+}
+initReveal();
+
+/* ── MOBILE NAV ──────────────────────── */
+function toggleMobileNav(){
+  const links = document.querySelector('.nav-links');
+  links.style.cssText = links.style.display==='flex' ? '' :
+    'display:flex;flex-direction:column;position:fixed;top:66px;left:0;right:0;background:rgba(8,12,18,0.97);padding:2rem 4vw;gap:1.5rem;border-bottom:1px solid rgba(42,108,246,0.15);z-index:99;';
+}
+document.addEventListener("DOMContentLoaded", function() {
+  const navLinks = document.querySelectorAll(".nav-links .cat-tab");
+  
+  const sections = [
+    document.querySelector(".hero"),             // TÜMÜ
+    document.querySelector(".products-section"), // ÜRÜNLER (Değişen satır)
+    document.querySelector(".brand-section")     // HAKKIMIZDA
+  ];
+
+  navLinks.forEach((link, index) => {
+    // KİLİT NOKTA: HTML'nizde kalmış olabilecek tüm eski tıklama komutlarını zorla siliyoruz ki çakışma (halat çekme yarışı) yaşanmasın!
+    link.removeAttribute("onclick"); 
+
+    link.addEventListener("click", function(e) {
+      e.preventDefault(); 
+      
+      // Ana sayfaya geç
+      document.getElementById('productPage').classList.remove('active');
+      document.getElementById('homePage').classList.add('active');
+      
+      // Sevdiğiniz animasyonu çalıştır
+      if(typeof initReveal === 'function') initReveal(); 
+
+      // Tümü seçildiyse ürün filtrelerini sıfırla
+      if (index === 0 && typeof filterCat === 'function') {
+        filterCat('all', link);
+      }
+
+      // Çakışmasız, beklemesiz, saniyesinde pürüzsüz kaydırma
+      const targetSection = sections[index];
+      if (targetSection) {
+        // Hedefin noktasını bul (üst menü payını -66 olarak düş)
+        const offsetTop = targetSection.getBoundingClientRect().top + window.scrollY - (index === 1 ? 126 : 66);
+
+        window.scrollTo({
+          top: index === 0 ? 0 : offsetTop, // "Tümü" ise tam tepeye, değilse hedefe in
+          behavior: "smooth"
+        });
+      }
+    });
+  });
+
+  // ── ELLE KAYDIRINCA MAVİ ÇİZGİYİ GÜNCELLEME (SCROLLSPY) ──
+  window.addEventListener("scroll", () => {
+    let currentLink = navLinks[0]; 
+    const scrollY = window.scrollY;
+
+    sections.forEach((sec, i) => {
+      if (sec) {
+        const sectionTop = sec.getBoundingClientRect().top + window.scrollY - 150; 
+        if (scrollY >= sectionTop) {
+          currentLink = navLinks[i];
+        }
+      }
+    });
+
+    if (Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50) {
+      currentLink = navLinks[2];
+    }
+
+    navLinks.forEach(link => link.classList.remove("active"));
+    if (currentLink) currentLink.classList.add("active");
+  });
+});
+</script>
+</body>
+</html>
