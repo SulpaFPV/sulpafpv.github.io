@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SULPA — Motor Driver Technology</title>
-<meta name="description" content="SULPA - FPV ve freestyle drone pilotları için yerli tasarım, yüksek performanslı S38-75-A1 4in1 Motor Driver (ESC) ve uçuş kontrol teknolojileri.">
-<meta name="keywords" content="SULPA, 4in1 ESC, 4in1 motor sürücü, 4in1, FPV ESC, 4in1 motor driver, S38-75-A1, drone donanımı, freestyle drone ESC, AM32, yerli teknoloji">
+<title>SULPA S38-75-A1 | Yerli Tasarım 4in1 FPV Motor Sürücü (ESC)</title>
+<meta name="description" content="Türkiye'nin yerli tasarım 4in1 FPV motor sürücüsü SULPA S38-75-A1. AM32 yazılımlı, 75A sürekli akım kapasiteli, yarış ve freestyle drone'lar için yüksek performanslı ESC.">
+<meta name="keywords" content="SULPA, 4in1 ESC, motor sürücü, FPV ESC, drone motor sürücü, S38-75-A1, 75A ESC, AM32 ESC, DSHOT600, yerli drone donanımı, freestyle drone parçaları">
 <meta name="author" content="SULPA">
 <meta property="og:title" content="SULPA — Yüksek Mühendislik FPV Teknolojileri">
 <meta property="og:description" content="Profesyonel FPV pilotları için erişilebilir maliyetle yüksek performans sunan S38-75-A1 4in1 Motor Sürücü.">
@@ -766,6 +766,57 @@ footer {
   .hero-title { font-size: clamp(2.5rem, 8vw, 4rem); }
   .section-heading { font-size: clamp(1.8rem, 6vw, 2.5rem); }
   .brand-heading { font-size: clamp(1.8rem, 6vw, 2.5rem); }
+  /* ══════════════════════════════════════════
+   LIGHTBOX (GÖRSEL BÜYÜTME)
+══════════════════════════════════════════ */
+.lightbox {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(8, 12, 18, 0.95);
+  backdrop-filter: blur(10px);
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.lightbox.active {
+  display: flex;
+  opacity: 1;
+}
+.lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border: 1px solid var(--blue-line);
+  box-shadow: 0 0 30px rgba(42, 108, 246, 0.3);
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+  object-fit: contain;
+}
+.lightbox.active img {
+  transform: scale(1);
+}
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: var(--grey-1);
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.lightbox-close:hover {
+  color: var(--blue-bright);
+}
+/* Detay sayfasındaki resimlerin fare ikonunu "büyüteç" veya "tıklanabilir" yapalım */
+.detail-gallery img, .detail-poster-img img {
+  cursor: zoom-in;
+}
 }
 
 /* 2. SADECE TELEFON EKRANLARINDA (768px'e kadar) */
@@ -824,7 +875,7 @@ footer {
       <p class="hero-slogan">
         FPV yarış ve freestyle pilotları için tasarlanmış S38-75-A1; profesyonel mühendislik anlayışını erişilebilir bir fiyat noktasında sunar.
       </p>
-      <a href="#" class="hero-cta" onclick="showProduct('4in1-driver')">
+      <a href="#" class="hero-cta" onclick="event.preventDefault(); showProduct('4in1-driver');">
         S38-75-A1 — 4in1 Motor Driver
         <span class="hero-cta-arrow">→</span>
       </a>
@@ -882,8 +933,8 @@ footer {
            ║ ← YENİ KATEGORİ EKLEMEK İÇİN    ║
            ║ Bu <button> satırını kopyala     ║
            ║ filterCat('slug',this) yaz       ║
-           ╚══════════════════════════════════╝ -->
-      <button class="cat-tab" onclick="filterCat('fc',this)">Flight Controller (Yakında)</button>
+           ╚══════════════════════════════════╝ 
+      <button class="cat-tab" onclick="filterCat('fc',this)">Flight Controller (Yakında)</button>-->
       <!--<button class="cat-tab" onclick="filterCat('diger',this)">Diğer</button>-->
     </div>
   </div>
@@ -923,13 +974,13 @@ footer {
         <div class="card-cta">↗</div>
       </div>
 
-      <!-- ═══ COMING SOON — FC ═══ -->
+      <!-- ═══ COMING SOON — FC ═══ 
       <div class="product-card" data-category="fc" style="cursor:default;">
         <div class="card-coming">
           <div class="card-coming-icon">FC</div>
           <div class="card-coming-txt">Flight Controller — Yakında</div>
         </div>
-      </div>
+      </div>-->
 
       <!-- ═══ COMING SOON — Diğer ═══ -->
       <!-- ╔══════════════════════════════════════════╗
@@ -1178,17 +1229,73 @@ footer {
 
 <script>
 /* ── PAGES ───────────────────────────── */
+/* ── HISTORY API & PAGES ───────────────────────────── */
+// Sayfa ilk açıldığında anasayfada olduğumuzu tarayıcı geçmişine kaydedelim
+window.history.replaceState({ page: 'home' }, "", window.location.pathname);
+
 function showProduct(slug){
+  // Tarayıcı geçmişine (URL sonuna #slug ekleyerek) yeni sayfa ekle
+  window.history.pushState({ page: 'product', slug: slug }, "", "#" + slug);
+  _renderProduct();
+}
+
+function showHome(){
+  // Eğer kullanıcı sitedeki "Geri Dön" butonuna basarsa ve geçmişte ürün sayfası varsa:
+  if (window.history.state && window.history.state.page === 'product') {
+    window.history.back(); // Bu otomatik olarak tarayıcı/telefon geri tuşu gibi davranır
+  } else {
+    window.history.pushState({ page: 'home' }, "", window.location.pathname);
+    _renderHome();
+  }
+}
+
+// Görsel geçişleri yapan iç fonksiyonlar
+function _renderProduct(){
   document.getElementById('homePage').classList.remove('active');
   document.getElementById('productPage').classList.add('active');
   window.scrollTo(0,0);
 }
-function showHome(){
+
+function _renderHome(){
   document.getElementById('productPage').classList.remove('active');
   document.getElementById('homePage').classList.add('active');
   window.scrollTo(0,0);
-  initReveal();
+  if(typeof initReveal === 'function') initReveal();
 }
+
+// TELEFON/TARAYICI GERİ TUŞUNU YAKALAMA
+window.addEventListener('popstate', function(event) {
+  if (event.state && event.state.page === 'product') {
+    _renderProduct();
+  } else {
+    _renderHome();
+  }
+});
+
+/* ── LIGHTBOX (GÖRSEL BÜYÜTME) KONTROLLERİ ─────────── */
+function openLightbox(src) {
+  const lightbox = document.getElementById('imageLightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  lightboxImg.src = src;
+  lightbox.style.display = 'flex';
+  setTimeout(() => lightbox.classList.add('active'), 10); // Animasyon için küçük bir bekleme
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById('imageLightbox');
+  lightbox.classList.remove('active');
+  setTimeout(() => lightbox.style.display = 'none', 300);
+}
+
+// Tüm ürün görsellerine tıklama olayını ekleyelim
+document.addEventListener("DOMContentLoaded", function() {
+  const productImages = document.querySelectorAll('.detail-gallery img, .detail-poster-img img');
+  productImages.forEach(img => {
+    img.addEventListener('click', function() {
+      openLightbox(this.src);
+    });
+  });
+});
 
 /* ── CATEGORY FILTER ─────────────────── */
 function filterCat(cat, btn){
@@ -1282,5 +1389,9 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
+<div id="imageLightbox" class="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close">&times;</span>
+  <img id="lightboxImg" src="" alt="Büyük Görsel">
+</div>
 </body>
 </html>
