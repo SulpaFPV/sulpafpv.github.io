@@ -25,6 +25,48 @@
   --shadow-sm:    0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md:    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --font-main:    'Inter', sans-serif;
+  --logo-filter: var(--logo-filter); /* Logoyu siyah yapar */
+  --transition-speed: 0.3s; /* Yumuşak geçiş için */
+}
+
+/* Karanlık Mod (Dark Mode) Değişkenleri */
+[data-theme="dark"] {
+  --bg-body:      #0f172a; /* Koyu lacivert/siyah arka plan */
+  --bg-surface:   #1e293b; /* Kartlar ve menü için biraz daha açık renk */
+  --text-main:    #f8fafc; /* Beyaza yakın ana metin */
+  --text-muted:   #cbd5e1; /* Açık gri ikincil metin */
+  --text-light:   #94a3b8; /* Daha soluk metin */
+  --border-color: #334155; /* Koyu gri kenarlıklar */
+  --logo-filter:  brightness(0) invert(1); /* Karanlık modda logoyu beyaza çevirir */
+  --shadow-sm:    0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md:    0 4px 6px -1px rgba(0, 0, 0, 0.6), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+}
+
+/* Renk değişimi sırasında yumuşak bir geçiş efekti (Opsiyonel ama şık durur) */
+body, nav, .product-card, .stat-item, .category-section, .detail-features, .detail-gallery, .gallery-cell {
+  transition: background-color var(--transition-speed), border-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* Navbar'a eklenecek ikon butonu için tasarım */
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+.theme-toggle:hover svg {
+  transform: scale(1.1);
+  color: var(--primary);
+
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -311,10 +353,17 @@ footer {
     SULPA
   </a>
   <ul class="nav-links">
-    <li><a href="#" class="cat-tab active">TÜMÜ</a></li>
-    <li><a href="#" class="cat-tab">ÜRÜNLER</a></li>
-    <li><a href="#" class="cat-tab">HAKKIMIZDA</a></li>
-  </ul>
+  <li><a href="#" class="cat-tab active">TÜMÜ</a></li>
+  <li><a href="#" class="cat-tab">ÜRÜNLER</a></li>
+  <li><a href="#" class="cat-tab">HAKKIMIZDA</a></li>
+  <li>
+    <button class="theme-toggle" id="themeToggle" aria-label="Tema Değiştir">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </li>
+</ul>
   <div class="nav-menu" onclick="toggleMobileNav()">
     <span></span><span></span><span></span>
   </div>
@@ -378,7 +427,7 @@ footer {
 
   <section class="brand-section">
     <div class="brand-visual">
-       <img src="SulpaLogo.svg" alt="SULPA" style="width: 60%; filter: brightness(0);">
+       <img src="SulpaLogo.svg" alt="SULPA" style="width: 60%; filter: var(--logo-filter);">
     </div>
     <div class="brand-content">
       <h2 class="brand-heading">Mühendislik ve Güven</h2>
@@ -574,6 +623,40 @@ document.addEventListener("DOMContentLoaded", function() {
     navLinks.forEach(link => link.classList.remove("active"));
     if (currentLink) currentLink.classList.add("active");
   });
+  // === Tema (Dark/Light Mode) Yönetimi ===
+const themeToggleBtn = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+
+// Kullanıcının daha önceki tercihini veya sistem ayarını kontrol et
+const currentTheme = localStorage.getItem('theme') || 
+                     (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+// İkonları SVG olarak tutalım
+const moonIcon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+const sunIcon = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+
+// Sayfa yüklendiğinde mevcut temayı uygula
+if (currentTheme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  themeIcon.innerHTML = sunIcon;
+} else {
+  themeIcon.innerHTML = moonIcon;
+}
+
+// Butona tıklandığında temayı değiştir
+themeToggleBtn.addEventListener('click', () => {
+  let theme = document.documentElement.getAttribute('data-theme');
+  
+  if (theme === 'dark') {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('theme', 'light');
+    themeIcon.innerHTML = moonIcon;
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
+    themeIcon.innerHTML = sunIcon;
+  }
+});
 });
 </script>
 </body>
