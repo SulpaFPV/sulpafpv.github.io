@@ -41,6 +41,12 @@ body {
 .page { display:none; min-height:100vh; }
 .page.active { display:block; }
 
+/* Ürün sayfasındayken menüyü gizleyen sınıf */
+body.product-view .nav-links,
+body.product-view .nav-menu {
+  display: none !important;
+}
+
 /* ══════════════════════════════════════════
    NAVIGATION (MENÜ)
 ══════════════════════════════════════════ */
@@ -52,16 +58,22 @@ nav {
   border-bottom: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
 }
+
 .nav-logo {
   font-size:1.5rem; font-weight:700;
   color:var(--text-main); text-decoration:none;
-  display:flex; align-items:center; gap:0.5rem;
+  display:flex; align-items:center; gap:12px;
   letter-spacing: 1px;
 }
-.nav-links { display:flex; gap:2rem; list-style:none; align-items:center; }
-.nav-links a {
-  text-decoration:none;
+
+.nav-logo img {
+  height: 32px;
+  width: auto;
+  display: block;
 }
+
+.nav-links { display:flex; gap:2rem; list-style:none; align-items:center; margin: 0; padding: 0; }
+.nav-links a { text-decoration:none; }
 .nav-menu { display:none; flex-direction:column; gap:5px; cursor: pointer; }
 .nav-menu span { display:block; width:24px; height:2px; background:var(--text-main); }
 
@@ -224,7 +236,7 @@ footer {
 }
 .detail-poster-img img {
   width: 100%;
-  max-height: 500px; /* Görselin dikeyde çok uzamasını engeller */
+  max-height: 500px;
   object-fit: contain;
 }
 .detail-poster-info { display:flex; flex-direction:column; justify-content:center; }
@@ -294,7 +306,10 @@ footer {
 <body>
 
 <nav>
-  <a class="nav-logo" href="#" onclick="showHome(); scrollTo(0,0)">SULPA</a>
+  <a class="nav-logo" href="#" onclick="showHome(); scrollTo(0,0)">
+    <img src="SulpaLogo.svg" alt="SULPA Logo">
+    SULPA
+  </a>
   <ul class="nav-links">
     <li><a href="#" class="cat-tab active">TÜMÜ</a></li>
     <li><a href="#" class="cat-tab">ÜRÜNLER</a></li>
@@ -310,8 +325,7 @@ footer {
     <div class="hero-content">
       <div class="hero-badge">Profesyonel FPV Donanımları</div>
       <h1 class="hero-title">Yerli Tasarım <br><span class="accent">Yüksek Performans</span></h1>
-      <p class="hero-slogan">FPV yarış ve freestyle pilotları için tasarlanmış S38-75-A1; profesyonel mühendislik anlayışını erişilebilir bir fiyat noktasında sunar.</p>
-      <a href="#" class="hero-cta" onclick="event.preventDefault(); showProduct('4in1-driver');">Ürünü İncele</a>
+      <p class="hero-slogan">FPV yarış ve freestyle pilotları için tasarlandı.<br>Profesyonel mühendislik anlayışı, erişilebilir fiyat noktasında.</p>      <a href="#" class="hero-cta" onclick="event.preventDefault(); showProduct('4in1-driver');">Ürünü İncele</a>
     </div>
     <div class="hero-visual">
       <div class="hero-img-box">
@@ -330,8 +344,8 @@ footer {
       <div class="stat-label">Voltaj Aralığı</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num">42.7<span>mm</span></div>
-      <div class="stat-label">Genişlik</div>
+      <div class="stat-num">42.7x41.5<span>mm</span></div>
+      <div class="stat-label">Ölçüler</div>
     </div>
     <div class="stat-item">
       <div class="stat-num">AM32</div>
@@ -404,9 +418,9 @@ footer {
       <div class="detail-specs-grid">
         <div class="spec-item"><div class="spec-label">Sürekli Akım</div><div class="spec-val">75A</div></div>
         <div class="spec-item"><div class="spec-label">Pik Akım</div><div class="spec-val">150A</div></div>
-        <div class="spec-item"><div class="spec-label">Voltaj</div><div class="spec-val">3–8S</div></div>
-        <div class="spec-item"><div class="spec-label">Protokol</div><div class="spec-val">AM32 / DSHOT600</div></div>
-        <div class="spec-item"><div class="spec-label">PWM Frekansı</div><div class="spec-val">8–128 kHz</div></div>
+        <div class="spec-item"><div class="spec-label">Gerilim aralığı</div><div class="spec-val">3–8S</div></div>
+        <div class="spec-item"><div class="spec-label">Protokoller</div><div class="spec-val">Dshot600/300/150-Oneshot-Multishot-PWM</div></div>
+        <div class="spec-item"><div class="spec-label">Frkans aralığı</div><div class="spec-val">8–128 kHz</div></div>
         <div class="spec-item"><div class="spec-label">Boyut</div><div class="spec-val">42.7 × 41.5 mm</div></div>
       </div>
     </div>
@@ -419,7 +433,7 @@ footer {
       <div class="detail-feature-list">
         <div class="detail-feature-item">Yüksek frekanslı sinyal işleme kapasitesine sahip güçlü 32-bit MCU</div>
         <div class="detail-feature-item">Üstün soğutma ve düşük iç direnç sunan orijinal Toshiba MOSFET dizilimi</div>
-        <div class="detail-feature-item">AM32 altyapısı ile sıfır gecikme ve tam DSHOT uyumluluğu</div>
+        <div class="detail-feature-item">AM32 altyapısı ile küresel standartlara uygun</div>
         <div class="detail-feature-item">Termal dağılımı maksimize eden çok katmanlı PCB tasarımı</div>
       </div>
     </div>
@@ -463,12 +477,14 @@ function showHome(){
 function _renderProduct(){
   document.getElementById('homePage').classList.remove('active');
   document.getElementById('productPage').classList.add('active');
+  document.body.classList.add('product-view'); /* Ürün sayfasına geçildiğinde gizleme sınıfını ekler */
   window.scrollTo(0,0);
 }
 
 function _renderHome(){
   document.getElementById('productPage').classList.remove('active');
   document.getElementById('homePage').classList.add('active');
+  document.body.classList.remove('product-view'); /* Ana sayfaya geçildiğinde gizleme sınıfını kaldırır */
   window.scrollTo(0,0);
 }
 
@@ -529,6 +545,7 @@ document.addEventListener("DOMContentLoaded", function() {
       e.preventDefault(); 
       document.getElementById('productPage').classList.remove('active');
       document.getElementById('homePage').classList.add('active');
+      document.body.classList.remove('product-view'); /* Buradan da ana sayfaya dönülürse menüyü tekrar gösterir */
       
       if (index === 0 && typeof filterCat === 'function') filterCat('all', link);
 
