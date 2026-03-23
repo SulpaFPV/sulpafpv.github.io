@@ -50,7 +50,6 @@
   --shadow-sm:    0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md:    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --font-main:    'Inter', sans-serif;
-  --logo-filter: var(--logo-filter); /* Logoyu siyah yapar */
   --transition-speed: 0.3s; /* Yumuşak geçiş için */
 }
 
@@ -136,6 +135,7 @@ nav {
   height: 50px; 
   width: auto;
   display: block;
+  filter: var(--logo-filter, none);
 }
 
 .nav-links { display:flex; gap:2rem; list-style:none; align-items:center; margin: 0; padding: 0; }
@@ -681,34 +681,13 @@ footer {
   </section>
 
   <section class="contact-section" id="contactSection">
-    <div class="contact-container">
-      <div class="contact-info">
-        <h2 class="contact-heading">Bize Ulaşın</h2>
-        <p class="contact-text">Proje gereksinimleriniz, toplu üretim talepleriniz veya teknik destek için bizimle iletişime geçebilirsiniz.</p>
-        <div class="contact-methods">
-          <div class="contact-method">
-            <span class="method-label">E-Posta:</span>
-            <a href="mailto:info@sulpa.com.tr" class="method-val">info@sulpa.com.tr</a>
-          </div>
-        </div>
-      </div>
-      <div class="contact-form-box">
-        <form class="contact-form" action="BURAYA_FORMSPREE_LINKI_GELECEK" method="POST">
-          <div class="form-group">
-            <label for="name">Adınız Soyadınız</label>
-            <input type="text" id="name" name="name" required placeholder="Adınız Soyadınız">
-          </div>
-          <div class="form-group">
-            <label for="email">E-Posta Adresiniz</label>
-            <input type="email" id="email" name="email" required placeholder="ornek@mail.com">
-          </div>
-          <div class="form-group">
-            <label for="message">Mesajınız</label>
-            <textarea id="message" name="message" rows="4" required placeholder="Size nasıl yardımcı olabiliriz?"></textarea>
-          </div>
-          <button type="submit" class="submit-btn">Mesaj Gönder</button>
-        </form>
-      </div>
+    <div class="contact-container minimalist">
+      <h2 class="contact-heading">Bize Ulaşın</h2>
+      <p class="contact-text">Proje gereksinimlerinize uygun özel üretimler veya teknik destek için doğrudan e-posta adresimiz üzerinden iletişime geçebilirsiniz.</p>
+      
+      <a href="mailto:info@sulpa.com.tr" class="large-mail-btn">
+        info@sulpa.com.tr
+      </a>
     </div>
   </section>
 
