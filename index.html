@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SULPA S38-75-A1 | Yerli Tasarım 4in1 FPV Motor Sürücü</title>
+<title>SULPA </title>
 <link rel="icon" href="assets/img/favicon.png" type="image/png" sizes="144x144">
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
 <meta name="description" content="Türkiye'nin yerli tasarım 4in1 FPV motor sürücüsü SULPA S38-75-A1. AM32 yazılımlı, 75A sürekli akım kapasiteli, yarış ve freestyle drone'lar için yüksek performanslı ESC.">
@@ -16,20 +16,12 @@
 
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org/",
-  "@type": "Product",
-  "name": "SULPA S38-75-A1 4in1 Motor Sürücü",
-  "image": [
-    "https://www.sulpa.com.tr/assets/img/S38-75-A1_2.png",
-    "https://www.sulpa.com.tr/assets/img/S38-75-A1_1.png",
-    "https://www.sulpa.com.tr/assets/img/S38-75-A1_3.png",
-    "https://www.sulpa.com.tr/assets/img/S38-75-A1_4.png"
-  ],
-  "description": "Türkiye'nin yerli tasarım 4in1 FPV motor sürücüsü SULPA S38-75-A1. AM32 yazılımlı, 75A sürekli akım kapasiteli yüksek performanslı ESC.",
-  "brand": {
-    "@type": "Brand",
-    "name": "SULPA"
-  }
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "SULPA",
+  "url": "https://www.sulpa.com.tr/",
+  "logo": "https://www.sulpa.com.tr/assets/img/SulpaLogo.svg",
+  "description": "Türkiye'nin yerli tasarım FPV motor sürücüleri ve donanımları üreticisi."
 }
 </script>
 
@@ -648,6 +640,32 @@ footer {
 .lightbox img { max-width: 90%; max-height: 90%; border-radius: 8px; transform: scale(0.95); transition: transform 0.3s; object-fit: contain; }
 .lightbox.active img { transform: scale(1); }
 .lightbox-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; cursor: pointer; }
+/* ══════════════════════════════════════════
+   MOBİL DETAY SAYFASI DÜZELTMELERİ
+══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* 1. Başlık boyutlarını mobil ekrana uygun orana küçültme */
+  .detail-name { font-size: 2rem; margin-bottom: 1rem; }
+  .detail-features-heading { font-size: 1.8rem; }
+  
+  /* 2. Kart kenar boşluklarını (padding/margin) azaltarak alanı genişletme */
+  .detail-poster, .detail-features { 
+    padding: 1.5rem; 
+    margin: 0 1rem 2rem 1rem; 
+  }
+
+  /* 3. Özellikler Tablosu: Mobilde daha temiz durması için Tek Sütun (1fr) yapıyoruz */
+  .detail-specs-grid { 
+    grid-template-columns: 1fr; 
+    gap: 0.8rem;
+  }
+}
+
+/* 4. Uzun kelimelerin kutu dışına taşmasını veya kaydırmasını engelleme (Genel Kural) */
+.spec-val { 
+  word-break: break-word; 
+}
+
 </style>
 </head>
 <body>
