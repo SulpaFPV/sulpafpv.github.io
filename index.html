@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SULPA </title>
+<title>SULPA | Yerli Tasarım FPV ESC ve 4in1 Motor Sürücüleri</title>
+<meta name="description" content="Türkiye'nin yerli tasarım 4in1 FPV motor sürücüsü SULPA. AM32 yazılımlı, 75A sürekli akım kapasiteli, Türk malı yüksek performanslı yarış ve freestyle drone ESC'si.">
+
 <link rel="icon" href="assets/img/favicon.png" type="image/png" sizes="144x144">
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
-<meta name="description" content="Türkiye'nin yerli tasarım 4in1 FPV motor sürücüsü SULPA S38-75-A1. AM32 yazılımlı, 75A sürekli akım kapasiteli, yarış ve freestyle drone'lar için yüksek performanslı ESC.">
 
 <meta property="og:title" content="SULPA ">
 <meta property="og:description" content="75A sürekli akım kapasiteli, yarış ve freestyle drone'lar için yüksek performanslı AM32 ESC.">
@@ -26,44 +27,58 @@
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════
-   KLASİK & TEMİZ TASARIM DEĞİŞKENLERİ
+   TEKNOLOJİK LÜKS & JAGUAR MAVİSİ DEĞİŞKENLERİ
 ═══════════════════════════════════════════ */
 :root {
-  --bg-body:      #f4f6f8;
-  --bg-surface:   #ffffff;
-  --text-main:    #1f2937;
-  --text-muted:   #4b5563;
-  --text-light:   #9ca3af;
-  --primary:      #0256d4;
-  --primary-hover:#0142a6;
-  --border-color: #e5e7eb;
+  --bg-body:      #F0F4F8; /* Temiz, buz mavisi alt tonlu bir açık gri */
+  --bg-surface:   #FFFFFF;
+  --text-main:    #0B132B; /* Siyah yerine çok derin bir lacivert */
+  --text-muted:   #475569; /* Slate (kayrak) grisi */
+  --text-light:   #94A3B8;
   
-  /* Yeni Eklenen Standartlar */
-  --radius-sm:    6px;
-  --radius-md:    12px;
-  --radius-lg:    16px;
-  --shadow-sm:    0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-md:    0 8px 16px -4px rgba(0, 0, 0, 0.08), 0 4px 8px -4px rgba(0, 0, 0, 0.04);
-  --shadow-hover: 0 12px 24px -4px rgba(2, 86, 212, 0.15); /* Marka rengiyle uyumlu hover gölgesi */
+  --primary:      #1C3D5A; /* Jaguar Indigo/Sapphire Blue (Lüks Lacivert) */
+  --primary-hover:#2A5C88; /* Harekete geçirici orta mavi */
+  --accent:       #3B82F6; /* Teknoloji/Led hissi veren parlak mavi */
+  --border-color: #E2E8F0; 
+  
+  --radius-sm:    8px;
+  --radius-md:    16px; /* Daha oval, aerodinamik kart köşeleri */
+  --radius-lg:    24px;
+  --shadow-sm:    0 4px 6px -1px rgba(28, 61, 90, 0.05), 0 2px 4px -1px rgba(28, 61, 90, 0.03);
+  --shadow-md:    0 10px 25px -3px rgba(28, 61, 90, 0.1), 0 4px 6px -2px rgba(28, 61, 90, 0.05);
+  --shadow-hover: 0 20px 25px -5px rgba(59, 130, 246, 0.15); /* Hover'da elektrik mavisi parlama */
   
   --font-main:    'Inter', sans-serif;
   --transition-speed: 0.3s;
 }
 
 [data-theme="dark"] {
-  --bg-body:      #0f172a; 
-  --bg-surface:   #1e293b; 
-  --text-main:    #f8fafc; 
-  --text-muted:   #cbd5e1; 
-  --text-light:   #94a3b8; 
-  --border-color: #334155; 
+  /* Arka planlar siyah veya gri değil, ana Jaguar mavisinin gece tonları */
+  --bg-body:      #09121F; /* Derin okyanus/gece laciverti */
+  --bg-surface:   #132135; /* Kartlar için bir tık daha aydınlık, tok bir lacivert */
+  
+  --text-main:    #F0F4F8; /* Açık moddaki buz mavisi arka planı, burada metin yaptık */
+  --text-muted:   #94A3B8; 
+  --text-light:   #64748B; 
+  
+  /* Kenarlıklar standart gri değil, temayla uyumlu koyu mavi/lacivert */
+  --border-color: #203550; 
+  
+  /* Açık moddaki orijinal Jaguar Laciverti (#1C3D5A) bu koyu zeminde okunmaz. 
+     Bu yüzden onun ruhunu koruyan, aydınlatılmış metalik bir versiyonunu kullanıyoruz. */
+  --primary:      #5B8CBF; 
+  --primary-hover:#74A5D8;
+  
+  /* Vurgu rengi açık modla TAMAMEN AYNI */
+  --accent:       #3B82F6; 
+  
   --logo-filter:  brightness(0) invert(1);
-  --shadow-sm:    0 2px 4px rgba(0, 0, 0, 0.4);
-  --shadow-md:    0 8px 16px -4px rgba(0, 0, 0, 0.6);
-  --shadow-hover: 0 12px 24px -4px rgba(2, 86, 212, 0.3);
+  --shadow-sm:    0 4px 6px -1px rgba(9, 18, 31, 0.8);
+  --shadow-md:    0 10px 25px -3px rgba(9, 18, 31, 0.9);
+  --shadow-hover: 0 20px 25px -5px rgba(59, 130, 246, 0.25);
 }
 
 /* Renk değişimi sırasında yumuşak bir geçiş efekti */
@@ -102,14 +117,62 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
 }
+/* Jaguar Tipografi ve Altın Vurgular */
+h1, h2, h3, h4, h5, h6, .nav-logo, .stat-num, .detail-name {
+  font-family: var(--font-heading);
+}
+
+/* Başlık ve Gradient Vurgular */
+.hero-title {
+  font-weight: 800; /* Daha kalın ve tok bir duruş */
+  letter-spacing: -1px; /* Harfleri biraz sıklaştırarak modern görünüm sağlar */
+}
+
+.hero-title .accent { 
+  display: inline-block; 
+  font-style: normal; /* İtaliği tamamen iptal ediyoruz */
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent; /* Yazının içinin gradient dolgulu olmasını sağlar */
+}
+
+.hero-badge, .card-cat, .detail-cat {
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.card-cat, .detail-cat {
+  color: var(--accent-gold); /* Kategori etiketlerini altın sarısına çevirir */
+  letter-spacing: 1px;
+}
+
+.brand-pillar-val {
+  color: var(--primary);
+  font-family: var(--font-heading);
+}
 
 .page { display:none; min-height:100vh; }
 .page.active { display:block; }
 
-/* Ürün sayfasındayken menüyü gizleyen sınıf */
-body.product-view .nav-links,
+/* Ürün sayfasındayken sadece menü linklerini ve hamburgeri gizle, tema butonunu bırak */
+body.product-view .nav-links li:not(:last-child),
 body.product-view .nav-menu {
   display: none !important;
+}
+
+/* Mobilde ürün sayfasındayken tema butonunun sağ üstte görünmeye devam etmesi için */
+@media (max-width: 768px) {
+  body.product-view .nav-links {
+    position: static; /* Mobildeki açılır menü pozisyonunu iptal et */
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+  }
 }
 
 /* ══════════════════════════════════════════
@@ -207,22 +270,24 @@ nav {
 .hero-slogan {
   font-size:1.1rem; color:var(--text-muted); max-width: 600px; margin-bottom:2.5rem;
 }
-/* Hero Butonu Güncellemesi */
+/* Teknolojik Hero Butonu */
 .hero-cta {
   display:inline-flex; align-items:center; justify-content:center;
-  font-size:1rem; font-weight:600; letter-spacing: 0.5px;
-  color:#fff; background:var(--primary);
-  padding:1rem 2.5rem; border-radius: var(--radius-sm);
-  text-decoration:none; 
+  font-weight:600; color:#fff;
+  padding:1rem 2.5rem; text-decoration:none; 
   transition: all var(--transition-speed);
-  box-shadow: var(--shadow-sm);
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  border-radius: 30px; /* Hap şeklinde aerodinamik tasarım */
+  border: none;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
 }
 .hero-cta:hover { 
-  background: var(--primary-hover); 
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
+  background: linear-gradient(135deg, var(--primary-hover), var(--accent));
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); /* Led parlama efekti */
+  transform: translateY(-3px);
 }
-
 /* Hero Görsel Kutusu Güncellemesi */
 .hero-img-box {
   width:100%; 
@@ -301,34 +366,50 @@ nav {
    ÜRÜN KARTI TASARIMI VE ETKİLEŞİMLERİ
 ══════════════════════════════════════════ */
 
-/* 1. Kartın Temel İskeleti (Çerçeveli Yapı) */
+/* 1. Teknolojik Cam Efektli Ürün Kartı */
 .product-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
   overflow: hidden;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   transition: all var(--transition-speed) ease;
+  
+  /* Şeffaflığı kaldırdık, net bir yüzey rengi ve arka plandan ayıran gölge ekledik */
+  background: var(--bg-surface); 
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 15px rgba(28, 61, 90, 0.08); /* Kartı hafifçe havaya kaldıran gölge */
+}
+
+[data-theme="dark"] .product-card {
+  background: var(--bg-surface); /* #132135 - Gövde arka planıyla (09121F) net kontrast */
+  border: 1px solid #2A405A; /* Karanlık modda kartın sınırlarını vurgulayan belirgin çerçeve */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* Derinlik hissi */
 }
 
 /* Kart Hover (Üzerine Gelme) Efekti */
 .product-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-8px);
   box-shadow: var(--shadow-hover);
-  border-color: var(--primary); /* Çerçeve mavi olur */
+  border-color: var(--accent); /* Çerçeve parlak mavi olur */
 }
 
 /* 2. Görsel Alanı (Hafif gri/mavi arka plan) */
 .card-visual-area {
-  background: var(--bg-body); 
+  /* Sayfa arka planıyla aynı olmaması için karta özel bir ton atadık */
+  background: #F8FAFC; 
   padding: 2rem;
   height: 240px; 
   display: flex;
   align-items: center;
   justify-content: center;
   border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .card-visual-area {
+  /* Karanlık modda görseli ön plana çıkaran, gövdeden farklı, tok bir iç ton */
+  background: #0D1929; 
+  border-bottom: 1px solid #203550;
 }
 
 .card-visual-area img { 
@@ -478,28 +559,43 @@ nav {
 }
 .large-mail-btn {
   display: inline-flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; font-weight: 600; letter-spacing: 0.5px;
-  color: #fff; background: var(--primary);
-  padding: 1rem 3.5rem; border-radius: var(--radius-sm); 
-  text-decoration: none;
+  font-weight: 600; color: #fff;
+  padding: 1rem 3.5rem; text-decoration: none;
   transition: all var(--transition-speed);
-  box-shadow: var(--shadow-sm);
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  border-radius: 30px;
+  border: none;
+  text-transform: none; /* Harfleri büyütme işlemini iptal ettik */
+  font-size: 1rem; /* Harfler küçüldüğü için yazıyı bir tık büyüttük */
+  letter-spacing: 1px;
 }
 .large-mail-btn:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
+  background: linear-gradient(135deg, var(--primary-hover), var(--accent));
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+  transform: translateY(-3px);
 }
 
 /* ══════════════════════════════════════════
-   FOOTER
+   MODERN TEKNOLOJİ FOOTER
 ══════════════════════════════════════════ */
 footer {
-  padding:2rem 4vw; background: #111827; color: #fff;
+  padding:2rem 4vw; 
+  background: var(--bg-surface); 
+  color: var(--text-muted);
   display:flex; align-items:center; justify-content:space-between;
+  border-top: 1px solid var(--border-color);
 }
-.footer-logo { font-size:1.2rem; font-weight:700; letter-spacing: 1px; }
-.footer-copy { font-size:0.9rem; color:#9ca3af; }
+.footer-logo { 
+  font-size:1.2rem; 
+  font-weight:800; 
+  letter-spacing: 1px; 
+  color: var(--text-main); 
+  font-family: var(--font-main); 
+}
+.footer-copy { 
+  font-size:0.9rem; 
+  color: var(--text-light); 
+}
 
 /* ══════════════════════════════════════════
    ÜRÜN DETAY SAYFASI
@@ -773,7 +869,7 @@ footer {
   <section class="hero">
     <div class="hero-content">
       <span class="hero-badge">Yüksek Performanslı FPV Donanımları</span>
-      <h1 class="hero-title">Yerli Tasarım <span class="accent">Yüksek Performans</span></h1>
+      <h1 class="hero-title">Yerli Tasarım <span class="accent">4in1 FPV ESC</span></h1>
       <p class="hero-slogan">Profesyonel mühendislik anlayışı, erişilebilir fiyat noktasında.</p>
       <a href="#" class="hero-cta" onclick="document.querySelectorAll('.cat-tab')[1].click(); return false;">Ürünleri İncele</a>
     </div>
@@ -1099,29 +1195,23 @@ document.addEventListener("DOMContentLoaded", function() {
   
   const themeToggleBtn = document.getElementById('themeToggle');
   const themeIcon = document.getElementById('themeIcon');
-  const currentTheme = localStorage.getItem('theme') || 
-                       (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
 
   const moonIcon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
   const sunIcon = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
 
-  if (currentTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    themeIcon.innerHTML = sunIcon;
-  } else {
-    themeIcon.innerHTML = moonIcon;
-  }
+  // Sayfa her açıldığında varsayılan olarak aydınlık modda başlatıyoruz
+  document.documentElement.removeAttribute('data-theme');
+  themeIcon.innerHTML = moonIcon;
 
+  // Butona tıklandığında temalar arası geçiş işlemi (Hafızada tutma kaldırıldı)
   themeToggleBtn.addEventListener('click', () => {
     let theme = document.documentElement.getAttribute('data-theme');
     
     if (theme === 'dark') {
       document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('theme', 'light');
       themeIcon.innerHTML = moonIcon;
     } else {
       document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
       themeIcon.innerHTML = sunIcon;
     }
   });
