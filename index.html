@@ -836,7 +836,89 @@ footer {
 .spec-val { 
   word-break: break-word; 
 }
+/* SOSYAL MEDYA İKON STİLLERİ */
+.social-links-contact {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+.social-links-contact a {
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  transition: all var(--transition-speed);
+}
+.social-links-contact a:hover {
+  color: #fff;
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
 
+.footer-social {
+  display: flex;
+  gap: 1.5rem;
+}
+.footer-social a {
+  color: var(--text-muted);
+  transition: color var(--transition-speed), transform var(--transition-speed);
+  display: flex;
+}
+.footer-social a:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+/* ÜRÜN VİDEOSU BÖLÜMÜ STİLLERİ */
+.product-video-section {
+  margin: 0 4vw 4vw;
+  padding: 3rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-speed);
+}
+.video-heading {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2rem;
+}
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Video Oranı */
+  height: 0;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: #000; /* Video yüklenirken siyah arkaplan */
+}
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+@media (max-width: 768px) {
+  .product-video-section {
+    padding: 1.5rem;
+    margin: 0 1rem 2rem 1rem;
+  }
+  .video-heading {
+    font-size: 1.8rem;
+  }
+}
 </style>
 </head>
 <body>
@@ -959,6 +1041,17 @@ footer {
       <a href="mailto:info@sulpa.com.tr" class="large-mail-btn">
         info@sulpa.com.tr
       </a>
+      <div class="social-links-contact">
+        <a href="https://www.instagram.com/sulpafpv/" target="_blank" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+        </a>
+        <a href="https://www.youtube.com/@SulpaFpv" target="_blank" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+        </a>
+        <a href="https://www.linkedin.com/company/sulpa/" target="_blank" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -977,6 +1070,8 @@ footer {
         <img src="assets/img/S38-75-A1_1.png" alt="SULPA S38-75-A1 4in1 FPV Motor Driver" class="thumb" onclick="currentSlideTo(1)" loading="lazy">
         <img src="assets/img/S38-75-A1_3.png" alt="SULPA S38-75-A1 4in1 FPV Motor Driver" class="thumb" onclick="currentSlideTo(2)" loading="lazy">
         <img src="assets/img/S38-75-A1_4.png" alt="SULPA S38-75-A1 4in1 FPV Motor Driver" class="thumb" onclick="currentSlideTo(3)" loading="lazy">
+        <img src="assets/img/S38-75-A1_5.png" alt="SULPA S38-75-A1 4in1 FPV Motor Driver" class="thumb" onclick="currentSlideTo(4)" loading="lazy">
+        <img src="assets/img/S38-75-A1_6.png" alt="SULPA S38-75-A1 4in1 FPV Motor Driver" class="thumb" onclick="currentSlideTo(5)" loading="lazy">
       </div>
 
       <div class="slider-container">
@@ -985,6 +1080,8 @@ footer {
           <img src="assets/img/S38-75-A1_1.png" alt="SULPA S38-75-A1 4in1 FPV Motor Driver" loading="lazy">
           <img src="assets/img/S38-75-A1_3.png" alt="SULPA S38-75-A1 4in1 FPV Motor Driver" loading="lazy">
           <img src="assets/img/S38-75-A1_4.png" alt="SULPA S38-75-A1 4in1 FPV Motor Driver" loading="lazy">
+          <img src="assets/img/S38-75-A1_5.png" alt="SULPA S38-75-A1 4in1 FPV Motor Driver" loading="lazy">
+          <img src="assets/img/S38-75-A1_6.png" alt="SULPA S38-75-A1 4in1 FPV Motor Driver" loading="lazy">
         </div>
         <button class="slider-btn prev-btn"aria-label="Önceki Görsel" onclick="moveSlider(-1)">&#10094;</button>
         <button class="slider-btn next-btn" aria-label="Sonraki Görsel" onclick="moveSlider(1)">&#10095;</button>
@@ -1006,7 +1103,7 @@ footer {
         <div class="spec-item"><div class="spec-label">Ağırlık</div><div class="spec-val">13 g</div></div>
       </div>
       
-      <div style="margin-top: 2.5rem; display: flex; align-items: flex-start;">
+      <div style="margin-top: 2.5rem; display: flex; align-items: flex-start; gap: 2rem; flex-wrap: wrap;">
         <a href="assets/firmware/S38-75-A1_AM32.hex" download="SULPA_S38-75-A1_AM32.hex" class="hero-cta" style="gap: 10px; padding: 0.8rem 2rem;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -1015,6 +1112,44 @@ footer {
           </svg>
           AM32 Firmware (.hex) İndir
         </a>
+
+        <!-- Yeni Kullanım Kılavuzu İndirme Butonu -->
+        <a href="assets/docs/Klavuz.pdf" target="_blank" class="hero-cta" style="gap: 10px; padding: 0.8rem 2rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Kılavuz (.pdf) İndir
+        </a>
+        
+        <!-- Yeni Datasheet İndirme Butonu -->
+        <a href="assets/docs/SULPA_S38-75-A1_Datasheet.pdf" download="SULPA_S38-75-A1_Datasheet.pdf" target="_blank" class="hero-cta" style="gap: 10px; padding: 0.8rem 2rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Datasheet (.pdf) İndir
+        </a>
+      </div>
+      <!-- Satın Alma Seçenekleri Bölümü -->
+      <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+        <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1.5rem; text-transform: uppercase;">Satın Alma Seçenekleri</h3>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a href="https://www.hepsiburada.com/sulpa-s38-75-a1-high-capacity-4-in-1-motor-driver-esc-p-HBCV0000GLDYTS?magaza=krafton" target="_blank" class="hero-cta" style="gap: 10px; padding: 0.8rem 2rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            Hepsiburada Üzerinden Satın Al
+          </a>
+        </div>
       </div>
       </div> </div> 
       
@@ -1029,6 +1164,19 @@ footer {
         <div class="detail-feature-item">Sinyal bütünlüğünü korumak için veri ve güç yollarının birbirinden ayrıldığı parazit önleyici devre tasarımı</div>
         <div class="detail-feature-item">Standart yarış ve freestyle şasilerine doğrudan uyumlu 30.5x30.5mm montaj aralığı (M4 delik yapısı ve M3 titreşim sönümleyici kauçuk uyumluluğu)</div>
       </div>
+    </div>
+  </div>
+  
+  <div class="product-video-section">
+    <h2 class="video-heading">Ürün İncelemesi ve Uçuş Testi</h2>
+    <div class="video-wrapper">
+      <iframe 
+        src="https://www.youtube.com/embed/xTF_k7rymfM?si=ZbMHvZoheNEJqJEy" 
+        title="SULPA FPV ESC Video" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        referrerpolicy="strict-origin-when-cross-origin" 
+        allowfullscreen>
+      </iframe>
     </div>
   </div>
 
