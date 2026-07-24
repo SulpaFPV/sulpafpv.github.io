@@ -682,7 +682,14 @@ footer {
 
 @media (max-width: 768px) {
   .detail-poster-img { flex-direction: column-reverse; }
-  .thumbnail-list { flex-direction: row; width: 100%; justify-content: center; }
+  /* flex-wrap: wrap eklendi ve gap hafifçe düzenlendi */
+  .thumbnail-list { 
+    flex-direction: row; 
+    width: 100%; 
+    justify-content: center; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+  }
   .thumbnail-list .thumb { width: 60px; height: 60px; }
 }
 
@@ -834,7 +841,8 @@ footer {
 
 /* 4. Uzun kelimelerin kutu dışına taşmasını veya kaydırmasını engelleme (Genel Kural) */
 .spec-val { 
-  word-break: break-word; 
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 /* SOSYAL MEDYA İKON STİLLERİ */
 .social-links-contact {
@@ -918,6 +926,12 @@ footer {
   .video-heading {
     font-size: 1.8rem;
   }
+}
+/* Taşan esnek veya uzun içeriklerin grid yapısını bozmasını engeller */
+.detail-poster > div,
+.detail-features > div {
+  min-width: 0;
+  max-width: 100%;
 }
 </style>
 </head>
