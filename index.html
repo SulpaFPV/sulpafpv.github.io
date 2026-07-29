@@ -1240,17 +1240,29 @@ footer {
 </div>
 
 <script>
-window.history.replaceState({ page: 'home' }, "", window.location.pathname);
+// SAYFA İLK YÜKLENDİĞİNDE URL KONTROLÜ
+const currentHash = window.location.hash;
+if (currentHash && currentHash.length > 1) {
+  // URL'de bir ürün linki (hash) varsa state'i ürün olarak ayarla ve ürünü render et
+  window.history.replaceState({ page: 'product', slug: currentHash.substring(1) }, "", currentHash);
+  _renderProduct();
+} else {
+  // Hash yoksa ana sayfada kal
+  window.history.replaceState({ page: 'home' }, "", window.location.pathname);
+}
 
 function showProduct(slug){
   window.history.pushState({ page: 'product', slug: slug }, "", "#" + slug);
   _renderProduct();
 }
 
+// GÜNCELLENMİŞ SHOWHOME FONKSİYONU
 function showHome(){
-  if (window.history.state && window.history.state.page === 'product') {
+  // Kullanıcı site içi dolaşımdan mı geldi, yoksa direkt linkten mi kontrolü
+  if (window.history.state && window.history.state.page === 'product' && document.referrer.includes(window.location.host)) {
     window.history.back();
   } else {
+    // Direkt linkle ürün sayfasına gelindiyse tarayıcı geçmişini geri sarmak yerine ana sayfayı ileriye (push) ekle
     window.history.pushState({ page: 'home' }, "", window.location.pathname);
     _renderHome();
   }
